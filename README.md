@@ -5,7 +5,7 @@
 Basic flashcard app that shows one question, and on tap, reveals the answer. (More features to be implemented, WIP).
 
 ### App Walk-though
-<img src="https://imgur.com/a/4VAY7rK.gif" width=420><br>
+<img src="https://imgur.com/a/4VAY7rK" width=666><br>
 
 ## Required
 - [x] Create New Project in Android Studio
