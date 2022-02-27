@@ -5,7 +5,8 @@
 Basic flashcard app that shows one question and has selectable multiple choice options for the answer. Also includes a feature to toggle the visibility of the options.
 
 ### App Walk-though
-<img src="https://imgur.com/a/4VAY7rK" width=666><br>
+//<img src="https://imgur.com/a/4VAY7rK" width=666><br>
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/4VAY7rK"  ><a href="//imgur.com/a/4VAY7rK">Quizlet Showcase</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 ## Required
 - [x] Create New Project in Android Studio
