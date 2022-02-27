@@ -2,7 +2,7 @@
 ## Lab 1
 
 ### App Description
-Basic flashcard app that shows one question, and on tap, reveals the answer. (More features to be implemented, WIP).
+Basic flashcard app that shows one question and has selectable multiple choice options for the answer. Also includes a feature to toggle the visibility of the options.
 
 ### App Walk-though
 <img src="https://imgur.com/a/4VAY7rK" width=666><br>
