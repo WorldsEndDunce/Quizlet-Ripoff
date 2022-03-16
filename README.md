@@ -3,7 +3,7 @@
 Basic flashcard app that shows one question and has selectable multiple choice options for the answer. Also includes a feature to toggle the visibility of the options.
 
 ### App Walk-though
-<img src="https://i.imgur.com/a/q8YuVeq.gif" width=666><br>
+<img src="https://i.imgur.com/q8YuVeq.gif" width=666><br>
 # Lab 2
 ## Required
 - [x] User can click on a ‘+’ button that takes the user to new ‘Add Card Screen’
