@@ -2,7 +2,7 @@
 ### App Description
 Flashcard app that displays a question and has selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, or create a new card.
 ### App Walkthough
-<img src="https://i.imgur.com/HukUpnd.gif" width=600><br>
+<img src="https://i.imgur.com/HukUpnd.gif" width=525><br>
 # Lab 2
 ## Required
 - [x] User can click on a ‘+’ button that takes the user to new ‘Add Card Screen’
