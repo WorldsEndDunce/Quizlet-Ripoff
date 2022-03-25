@@ -19,7 +19,7 @@
         android:gravity="center"
         android:text="What is my favorite color?"
         android:padding="20dp"
-        android:textSize="40sp"></TextView>
+        android:textSize="25sp"></TextView>
 
     <TextView
         android:id="@+id/flashcard_option1"
@@ -33,22 +33,25 @@
         android:foregroundGravity="center"
         android:gravity="center_horizontal"
         android:text="Pink"
+        android:textAlignment="center"
         android:textSize="40sp"
         android:visibility="invisible"></TextView>
+
     <TextView
         android:id="@+id/flashcard_answer"
-        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:layout_below="@+id/flashcard_question"
-        android:layout_marginTop="125dp"
         android:layout_marginLeft="25dp"
+        android:layout_marginTop="125dp"
         android:layout_marginRight="25dp"
         android:background="#FFBB86FC"
-        android:gravity="center_horizontal"
         android:foregroundGravity="center"
+        android:gravity="center_horizontal"
         android:text="Orange"
-        android:textSize="40sp"></TextView>
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:visibility="invisible"></TextView>
 
     <TextView
         android:id="@+id/flashcard_option2"
@@ -63,6 +66,7 @@
         android:gravity="center_horizontal"
         android:foregroundGravity="center"
         android:text="Blue"
+        android:textAlignment="center"
         android:textSize="40sp"></TextView>
 
     <ImageView
@@ -94,4 +98,26 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="20dp"
         android:src="@drawable/ic_edit" />
+
+    <ImageView
+        android:id="@+id/next_card"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="355dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_next"
+        android:translationZ="90dp" />
+
+    <ImageView
+        android:id="@+id/delete_card"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/ic_delete"
+        android:translationZ="90dp" />
 </RelativeLayout>

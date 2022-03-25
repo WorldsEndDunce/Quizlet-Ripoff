@@ -1,26 +1,23 @@
 package com.example.quizletripoff;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    FlashcardDatabase flashcardDatabase;
+    List<Flashcard> allFlashcards;
+    Flashcard cardToEdit;
+    int curCard = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
         ImageView eye = ((ImageView) findViewById(R.id.toggle_choices_visibility));
         ImageView add = ((ImageView) findViewById(R.id.add_card));
         ImageView edit = ((ImageView) findViewById(R.id.edit_card));
+        ImageView next = ((ImageView) findViewById(R.id.next_card));
+        ImageView delete = ((ImageView) findViewById(R.id.delete_card));
+
+        flashcardDatabase = new FlashcardDatabase(getApplicationContext());
+        allFlashcards = flashcardDatabase.getAllCards();
+        if (allFlashcards.isEmpty()) {
+            Flashcard og = new Flashcard("What is my favorite color?", "Orange", "Pink", "Blue");
+            flashcardDatabase.insertCard(og);
+        }
+        question.setText(allFlashcards.get(0).getQuestion());
+        answer.setText(allFlashcards.get(0).getAnswer());
+        option1.setText(allFlashcards.get(0).getWrongAnswer1());
+        option2.setText(allFlashcards.get(0).getWrongAnswer2());
 
         findViewById(R.id.parent).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 if (answer.getVisibility() == View.INVISIBLE) {
                     eye.setImageResource(R.drawable.ic_eye);
                     answer.setVisibility(View.VISIBLE);
-                    option1.setVisibility(View.VISIBLE);
-                    option2.setVisibility(View.VISIBLE);
+                    if (!option1.getText().toString().equals("")) option1.setVisibility(View.VISIBLE);
+                    if (!option1.getText().toString().equals("")) option2.setVisibility(View.VISIBLE);
                 }
                 else {
                     eye.setImageResource(R.drawable.hiddeneye);
@@ -93,7 +103,54 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("curAnswer", answer.getText().toString());
                 intent.putExtra("curOption1", option1.getText().toString());
                 intent.putExtra("curOption2", option2.getText().toString());
-                MainActivity.this.startActivityForResult(intent, 100);
+                cardToEdit = allFlashcards.get(curCard);
+                startActivityForResult(intent, 3017);
+            }
+        });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (allFlashcards.size() == 0 || allFlashcards.size() == 1) return; // no next card
+                int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                question.setText(allFlashcards.get(nextCard).getQuestion());
+                answer.setText(allFlashcards.get(nextCard).getAnswer());
+                option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
+                option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
+                if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
+                else option1.setVisibility(View.INVISIBLE);
+                if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
+                else option2.setVisibility(View.INVISIBLE);
+                curCard = nextCard;
+        }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flashcardDatabase.deleteCard(((TextView) findViewById(R.id.flashcard_question)).getText().toString());
+                allFlashcards = flashcardDatabase.getAllCards();
+                if (allFlashcards.size() == 0) {
+                    question.setText("Add a card! :>");
+                    answer.setText("");
+                    option1.setText("");
+                    option2.setText("");
+                }
+                else if (allFlashcards.size() == 1) {
+                    question.setText(allFlashcards.get(0).getQuestion());
+                    answer.setText(allFlashcards.get(0).getAnswer());
+                    option1.setText(allFlashcards.get(0).getWrongAnswer1());
+                    option2.setText(allFlashcards.get(0).getWrongAnswer2());
+                    curCard = 0;
+                }
+                else {
+                    int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                    while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                    question.setText(allFlashcards.get(nextCard).getQuestion());
+                    answer.setText(allFlashcards.get(nextCard).getAnswer());
+                    option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
+                    option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
+                    curCard = nextCard;
+                }
             }
         });
     }
@@ -109,21 +166,39 @@ public class MainActivity extends AppCompatActivity {
         ImageView eye = ((ImageView) findViewById(R.id.toggle_choices_visibility));
         ImageView add = ((ImageView) findViewById(R.id.add_card));
         ImageView edit = ((ImageView) findViewById(R.id.edit_card));
+        ImageView next = ((ImageView) findViewById(R.id.next_card));
+        ImageView delete = ((ImageView) findViewById(R.id.delete_card));
 
        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             String newQuestion = data.getExtras().getString("newQuestion");
             String newAnswer = data.getExtras().getString("newAnswer");
             String newOption1 = data.getExtras().getString("newOption1");
             String newOption2 = data.getExtras().getString("newOption2");
-//            String[] pos = {"@+id/flashcard_answer", "@+id/flashcard_option1", "@+id/flashcard_option2"};
-//            List<String> positions = Arrays.asList(pos);
-//            Collections.shuffle(positions);
-            
+            flashcardDatabase.insertCard(new Flashcard(newQuestion, newAnswer, newOption1, newOption2));
+            allFlashcards = flashcardDatabase.getAllCards();
             question.setText(newQuestion);
             answer.setText(newAnswer);
             option1.setText(newOption1);
             option2.setText(newOption2);
             Snackbar.make(findViewById(R.id.flashcard_question), "Card created.", Snackbar.LENGTH_SHORT).show();
+       }
+       else if (requestCode == 3017 && resultCode == RESULT_OK) {
+           String newQuestion = data.getExtras().getString("newQuestion");
+           String newAnswer = data.getExtras().getString("newAnswer");
+           String newOption1 = data.getExtras().getString("newOption1");
+           String newOption2 = data.getExtras().getString("newOption2");
+           question.setText(newQuestion);
+           answer.setText(newAnswer);
+           option1.setText(newOption1);
+           option2.setText(newOption2);
+           Snackbar.make(findViewById(R.id.flashcard_question), "Edit successful.", Snackbar.LENGTH_SHORT).show();
+
+           cardToEdit.setQuestion(newQuestion);
+           cardToEdit.setAnswer(newAnswer);
+           cardToEdit.setWrongAnswer1(newOption1);
+           cardToEdit.setWrongAnswer2(newOption2);
+           flashcardDatabase.updateCard(cardToEdit);
+           allFlashcards = flashcardDatabase.getAllCards();
        }
 
         findViewById(R.id.parent).setOnClickListener(new View.OnClickListener() {
@@ -184,8 +259,60 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("curAnswer", answer.getText().toString());
                 intent.putExtra("curOption1", option1.getText().toString());
                 intent.putExtra("curOption2", option2.getText().toString());
-                MainActivity.this.startActivityForResult(intent, 100);
+                cardToEdit = allFlashcards.get(curCard);
+                startActivityForResult(intent, 3017);
             }
         });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // question.setText(Integer.toString(allFlashcards.size())); debugging purposes
+                if (allFlashcards.size() == 0 || allFlashcards.size() == 1) return; // no next card
+                int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                question.setText(allFlashcards.get(nextCard).getQuestion());
+                answer.setText(allFlashcards.get(nextCard).getAnswer());
+                option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
+                option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
+                if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
+                else option1.setVisibility(View.INVISIBLE);
+                if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
+                else option2.setVisibility(View.INVISIBLE);
+                curCard = nextCard;
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                flashcardDatabase.deleteCard(((TextView) findViewById(R.id.flashcard_question)).getText().toString());
+                allFlashcards = flashcardDatabase.getAllCards();
+                if (allFlashcards.size() == 0) {
+                    question.setText("Add a card! :>");
+                    answer.setText("");
+                    option1.setText("");
+                    option2.setText("");
+                }
+                else if (allFlashcards.size() == 1) {
+                    question.setText(allFlashcards.get(0).getQuestion());
+                    answer.setText(allFlashcards.get(0).getAnswer());
+                    option1.setText(allFlashcards.get(0).getWrongAnswer1());
+                    option2.setText(allFlashcards.get(0).getWrongAnswer2());
+                    curCard = 0;
+                }
+                else {
+                    int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                    while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                    question.setText(allFlashcards.get(nextCard).getQuestion());
+                    answer.setText(allFlashcards.get(nextCard).getAnswer());
+                    option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
+                    option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
+                    curCard = nextCard;
+                }
+            }
+        });
+    }
+    private int getRandomNumber(int minNum, int maxNum) {
+        Random rand = new Random();
+        return rand.nextInt((maxNum - minNum) + 1) + minNum;
     }
 }
