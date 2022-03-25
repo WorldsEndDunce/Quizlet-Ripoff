@@ -1,9 +1,24 @@
 ## Quizlet Ripoff
+## Lab 3
+### App Description
+Flashcard app that stores a database of flashcards and displays one random flashcard at a time that can have selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, delete cards, or create a new card.
+### App Walk-though
+<img src="https://i.imgur.com/ufnICPx.gif" width=525><br>
+## Required
+- [x] User can create a card and still see their created card when the app is relaunched.
+- [x] User can create muliple cards and browse through all created cards
+
+## Optional
+- [x] User can delete a card and no longer see it in their deck anymore
+- [x] Flashcards are shown in random order instead of the order they were created in
+- [x] User can edit a card and see the edit saved when they browse through their deck of cards
+- [x] User can create flashcards with multiple answers and be able to browse through cards with multiple choice answers shown
+
+## Lab 2
 ### App Description
 Flashcard app that displays a question and has selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, or create a new card.
 ### App Walkthough
 <img src="https://i.imgur.com/HukUpnd.gif" width=525><br>
-# Lab 2
 ## Required
 - [x] User can click on a ‘+’ button that takes the user to new ‘Add Card Screen’
 - [x] The 'Add Card Screen' has a cancel button to take the user back to the main screen
