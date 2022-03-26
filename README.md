@@ -3,7 +3,7 @@
 ### App Description
 Flashcard app that stores a database of flashcards and displays one random flashcard at a time that can have selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, delete cards, or create a new card.
 ### App Walk-though
-<img src="https://i.imgur.com/ufnICPx.gif" width=525><br>
+<img src="https://i.imgur.com/DERMqub.gif" width=525><br>
 ## Required
 - [x] User can create a card and still see their created card when the app is relaunched.
 - [x] User can create muliple cards and browse through all created cards
