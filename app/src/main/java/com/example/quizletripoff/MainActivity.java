@@ -3,6 +3,8 @@ package com.example.quizletripoff;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView question = findViewById(R.id.flashcard_question);
         TextView answer = findViewById(R.id.flashcard_answer);
+        TextView answer2 = findViewById(R.id.flashcard_answer2);
         TextView option1 = findViewById(R.id.flashcard_option1);
         TextView option2 = findViewById(R.id.flashcard_option2);
         ImageView eye = ((ImageView) findViewById(R.id.toggle_choices_visibility));
@@ -51,6 +54,27 @@ public class MainActivity extends AppCompatActivity {
                 answer.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
                 option1.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
                 option2.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
+            }
+        });
+        question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answer2.setText(answer.getText());
+                question.setCameraDistance(100000);
+                answer.setCameraDistance(100000);
+                question.animate().rotationY(90).setDuration(200)
+                 .withEndAction(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                question.setVisibility(View.INVISIBLE);
+                                answer2.setVisibility(View.VISIBLE);
+                                // second quarter turn
+                                answer2.setRotationY(-90);
+                                answer2.animate().rotationY(0).setDuration(200).start();
+                            }
+                        }
+                ).start();
             }
         });
         answer.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick (View v) {
                 Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
                 startActivityForResult(intent, 100);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
         edit.setOnClickListener(new View.OnClickListener() {
@@ -105,22 +130,63 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("curOption2", option2.getText().toString());
                 cardToEdit = allFlashcards.get(curCard);
                 startActivityForResult(intent, 3017);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Animation leftOutAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.left_out);
+                final Animation rightInAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_in);
+
                 if (allFlashcards.size() == 0 || allFlashcards.size() == 1) return; // no next card
                 int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
-                while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
-                question.setText(allFlashcards.get(nextCard).getQuestion());
-                answer.setText(allFlashcards.get(nextCard).getAnswer());
-                option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
-                option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
-                if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
-                else option1.setVisibility(View.INVISIBLE);
-                if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
-                else option2.setVisibility(View.INVISIBLE);
+                while (nextCard == curCard || allFlashcards.get(nextCard).getQuestion().equals(allFlashcards.get(curCard).getQuestion())) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                int finalNextCard = nextCard;
+                leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        question.setRotationY(0);
+                        answer2.setTranslationZ(-5);
+                        question.setVisibility(View.VISIBLE);
+                        answer2.setVisibility(View.INVISIBLE);
+                        question.startAnimation(leftOutAnim);
+                        if (answer2.getVisibility() == View.VISIBLE) answer2.startAnimation(leftOutAnim);
+                        delete.startAnimation(leftOutAnim);
+
+                        if (answer.getVisibility() != View.INVISIBLE) {
+                            answer.startAnimation(leftOutAnim);
+                            option1.startAnimation(leftOutAnim);
+                            option2.startAnimation(leftOutAnim);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        question.setText(allFlashcards.get(finalNextCard).getQuestion());
+                        answer.setText(allFlashcards.get(finalNextCard).getAnswer());
+                        option1.setText(allFlashcards.get(finalNextCard).getWrongAnswer1());
+                        option2.setText(allFlashcards.get(finalNextCard).getWrongAnswer2());
+                        if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
+                        else option1.setVisibility(View.INVISIBLE);
+                        if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
+                        else option2.setVisibility(View.INVISIBLE);
+                        answer2.setVisibility(View.INVISIBLE);
+                        delete.startAnimation(rightInAnim);
+                        question.startAnimation(rightInAnim);
+                        answer2.startAnimation(rightInAnim);
+                        if (answer.getVisibility() != View.INVISIBLE) {
+                            answer.startAnimation(rightInAnim);
+                            option1.startAnimation(rightInAnim);
+                            option2.startAnimation(rightInAnim);
+                        }
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // we don't need to worry about this method
+                    }
+                });
+                question.startAnimation(leftOutAnim);
                 curCard = nextCard;
         }
         });
@@ -153,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -161,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView question = findViewById(R.id.flashcard_question);
         TextView answer = findViewById(R.id.flashcard_answer);
+        TextView answer2 = findViewById(R.id.flashcard_answer2);
         TextView option1 = findViewById(R.id.flashcard_option1);
         TextView option2 = findViewById(R.id.flashcard_option2);
         ImageView eye = ((ImageView) findViewById(R.id.toggle_choices_visibility));
@@ -176,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
             String newOption2 = data.getExtras().getString("newOption2");
             flashcardDatabase.insertCard(new Flashcard(newQuestion, newAnswer, newOption1, newOption2));
             allFlashcards = flashcardDatabase.getAllCards();
+            curCard = allFlashcards.size() - 1;
             question.setText(newQuestion);
             answer.setText(newAnswer);
             option1.setText(newOption1);
@@ -200,6 +269,12 @@ public class MainActivity extends AppCompatActivity {
            flashcardDatabase.updateCard(cardToEdit);
            allFlashcards = flashcardDatabase.getAllCards();
        }
+       else if (requestCode == 100 && resultCode == RESULT_CANCELED){
+           question.setText(allFlashcards.get(curCard).getQuestion());
+           answer.setText(allFlashcards.get(curCard).getAnswer());
+           option1.setText(allFlashcards.get(curCard).getWrongAnswer1());
+           option2.setText(allFlashcards.get(curCard).getWrongAnswer2());
+       }
 
         findViewById(R.id.parent).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +282,27 @@ public class MainActivity extends AppCompatActivity {
                 answer.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
                 option1.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
                 option2.setBackgroundColor(getResources().getColor(R.color.purple_200, null));
+            }
+        });
+        question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                answer2.setText(answer.getText());
+                question.setCameraDistance(100000);
+                answer.setCameraDistance(100000);
+                question.animate().rotationY(90).setDuration(200)
+                        .withEndAction(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        question.setVisibility(View.INVISIBLE);
+                                        answer2.setVisibility(View.VISIBLE);
+                                        // second quarter turn
+                                        answer2.setRotationY(-90);
+                                        answer2.animate().rotationY(0).setDuration(200).start();
+                                    }
+                                }
+                        ).start();
             }
         });
         answer.setOnClickListener(new View.OnClickListener() {
@@ -249,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick (View v) {
                 Intent intent = new Intent(MainActivity.this, AddCardActivity.class);
                 startActivityForResult(intent, 100);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
         edit.setOnClickListener(new View.OnClickListener() {
@@ -261,23 +358,63 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("curOption2", option2.getText().toString());
                 cardToEdit = allFlashcards.get(curCard);
                 startActivityForResult(intent, 3017);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
             }
         });
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // question.setText(Integer.toString(allFlashcards.size())); debugging purposes
+                final Animation leftOutAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.left_out);
+                final Animation rightInAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right_in);
+
                 if (allFlashcards.size() == 0 || allFlashcards.size() == 1) return; // no next card
                 int nextCard = getRandomNumber(0, allFlashcards.size() - 1);
-                while (nextCard == curCard) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
-                question.setText(allFlashcards.get(nextCard).getQuestion());
-                answer.setText(allFlashcards.get(nextCard).getAnswer());
-                option1.setText(allFlashcards.get(nextCard).getWrongAnswer1());
-                option2.setText(allFlashcards.get(nextCard).getWrongAnswer2());
-                if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
-                else option1.setVisibility(View.INVISIBLE);
-                if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
-                else option2.setVisibility(View.INVISIBLE);
+                while (nextCard == curCard || allFlashcards.get(nextCard).getQuestion().equals(allFlashcards.get(curCard).getQuestion())) nextCard = getRandomNumber(0, allFlashcards.size() - 1);
+                int finalNextCard = nextCard;
+                leftOutAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        question.setVisibility(View.VISIBLE);
+                        question.setRotationY(0);
+                        answer2.setVisibility(View.INVISIBLE);
+                        answer2.setTranslationZ(-5);
+                        question.startAnimation(leftOutAnim);
+                        if (answer2.getVisibility() == View.VISIBLE) answer2.startAnimation(leftOutAnim);
+                        delete.startAnimation(leftOutAnim);
+
+                        if (answer.getVisibility() != View.INVISIBLE) {
+                            answer.startAnimation(leftOutAnim);
+                            option1.startAnimation(leftOutAnim);
+                            option2.startAnimation(leftOutAnim);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        question.setText(allFlashcards.get(finalNextCard).getQuestion());
+                        answer.setText(allFlashcards.get(finalNextCard).getAnswer());
+                        option1.setText(allFlashcards.get(finalNextCard).getWrongAnswer1());
+                        option2.setText(allFlashcards.get(finalNextCard).getWrongAnswer2());
+                        if (!option1.getText().equals("") && answer.getVisibility() == View.VISIBLE) option1.setVisibility(View.VISIBLE);
+                        else option1.setVisibility(View.INVISIBLE);
+                        if (!option2.getText().equals("") && answer.getVisibility() == View.VISIBLE) option2.setVisibility(View.VISIBLE);
+                        else option2.setVisibility(View.INVISIBLE);
+                        answer2.setVisibility(View.INVISIBLE);
+                        delete.startAnimation(rightInAnim);
+                        question.startAnimation(rightInAnim);
+                        answer2.startAnimation(rightInAnim);
+                        if (answer.getVisibility() != View.INVISIBLE) {
+                            answer.startAnimation(rightInAnim);
+                            option1.startAnimation(rightInAnim);
+                            option2.startAnimation(rightInAnim);
+                        }
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        // we don't need to worry about this method
+                    }
+                });
+                question.startAnimation(leftOutAnim);
                 curCard = nextCard;
             }
         });

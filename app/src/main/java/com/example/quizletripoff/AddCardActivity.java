@@ -36,7 +36,8 @@ public class AddCardActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
                 public void onClick (View v) {
-                 finish();
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
 
