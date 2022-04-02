@@ -1,9 +1,41 @@
-## Quizlet Ripoff
+## Quozlett Lite
+## Lab 4
+### App Description
+Stylishly animated flashcard app that stores a database of flashcards and displays one random flashcard at a time that can have selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, delete cards, or create a new card.
+
+### App Walk-though
+<img src="YOUR_GIF_URL_HERE" width=200><br>
+## Required
+- [x] User sees a transition animation when going from the main screen to the add card screen.
+- [x] User sees a reveal animation when the flashcard is tapped and the answer is shown
+- [x] User sees flashcards animating in / out when the 'next' button is tapped
+
+## Optional
+- [x] Extra styling is added!
+- [ ] User sees a countdown timer for each question
+- [x] User sees a 'card flip' animation when the card is tapped
+- [ ] User sees a celebration animation with confetti when they answer a question correctly
+
+## Lab 3
+### App Description
+Flashcard app that stores a database of flashcards and displays one random flashcard at a time that can have selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, delete cards, or create a new card.
+### App Walk-though
+<img src="https://i.imgur.com/DERMqub.gif" width=525><br>
+## Required
+- [x] User can create a card and still see their created card when the app is relaunched.
+- [x] User can create muliple cards and browse through all created cards
+
+## Optional
+- [x] User can delete a card and no longer see it in their deck anymore
+- [x] Flashcards are shown in random order instead of the order they were created in
+- [x] User can edit a card and see the edit saved when they browse through their deck of cards
+- [x] User can create flashcards with multiple answers and be able to browse through cards with multiple choice answers shown
+
+## Lab 2
 ### App Description
 Flashcard app that displays a question and has selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, or create a new card.
 ### App Walkthough
 <img src="https://i.imgur.com/HukUpnd.gif" width=525><br>
-# Lab 2
 ## Required
 - [x] User can click on a ‘+’ button that takes the user to new ‘Add Card Screen’
 - [x] The 'Add Card Screen' has a cancel button to take the user back to the main screen
