@@ -22,7 +22,7 @@ public class AddCardActivity extends AppCompatActivity {
         EditText newAnswer = ((EditText) findViewById(R.id.new_answer));
         EditText newOption1 = ((EditText) findViewById(R.id.new_option1));
         EditText newOption2 = ((EditText) findViewById(R.id.new_option2));
-        
+
         String curQuestion = getIntent().getStringExtra("curQuestion");
         String curAnswer = getIntent().getStringExtra("curAnswer");
         String curOption1 = getIntent().getStringExtra("curOption1");
@@ -35,7 +35,7 @@ public class AddCardActivity extends AppCompatActivity {
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-                public void onClick (View v) {
+            public void onClick (View v) {
                 setResult(RESULT_CANCELED);
                 finish();
             }
