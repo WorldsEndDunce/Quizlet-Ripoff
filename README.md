@@ -4,7 +4,7 @@
 Stylishly animated flashcard app that stores a database of flashcards and displays one random flashcard at a time that can have selectable multiple choice options for the answer. Allows user to change the visibility of the options, edit the current card, delete cards, or create a new card.
 
 ### App Walk-though
-<img src="YOUR_GIF_URL_HERE" width=200><br>
+<img src="https://i.imgur.com/pUvD8h8.gif" width=525><br>
 ## Required
 - [x] User sees a transition animation when going from the main screen to the add card screen.
 - [x] User sees a reveal animation when the flashcard is tapped and the answer is shown
